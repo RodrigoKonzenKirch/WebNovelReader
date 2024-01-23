@@ -82,7 +82,7 @@ dependencies {
     debugImplementation("androidx.compose.ui:ui-tooling")
     debugImplementation("androidx.compose.ui:ui-test-manifest")
     testImplementation("com.google.truth:truth:1.1.4")
-    testImplementation("io.mockk:mockk:1.13.8")
+    testImplementation("io.mockk:mockk:1.10.5")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.7.1")
 
 }
