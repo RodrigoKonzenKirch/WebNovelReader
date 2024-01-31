@@ -71,6 +71,8 @@ dependencies {
     ksp("com.google.dagger:hilt-compiler:$hilt_version")
     implementation("androidx.room:room-runtime:$room_version")
     ksp("androidx.room:room-compiler:$room_version")
+    implementation("androidx.room:room-ktx:$room_version")
+
     implementation("androidx.datastore:datastore-preferences:1.0.0")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
 
