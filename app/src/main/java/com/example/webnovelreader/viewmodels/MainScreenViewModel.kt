@@ -42,4 +42,7 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
+    fun bookmarkUrl(url: String) {
+
+    }
 }
