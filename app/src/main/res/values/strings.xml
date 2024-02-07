@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Web Novel Reader</string>
+    <string name="button_bookmark_list">Bookmark List</string>
 </resources>

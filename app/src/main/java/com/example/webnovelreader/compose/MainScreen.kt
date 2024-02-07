@@ -29,14 +29,19 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.webnovelreader.R
 import com.example.webnovelreader.viewmodels.MainScreenViewModel
 
 @Composable
-fun MainScreen(modifier: Modifier = Modifier) {
+fun MainScreen(
+    modifier: Modifier = Modifier,
+    onNavigateToBookmark: () -> Unit
+) {
     val viewModel = hiltViewModel<MainScreenViewModel>()
 
     val currentWebPageTitle = rememberSaveable {
@@ -80,11 +85,12 @@ fun MainScreen(modifier: Modifier = Modifier) {
                         currentWebPageTitle.value, 
                         currentUrl.value,
                         onBookmarkUrl = {
-                            viewModel.bookmarkUrl(currentUrl.value)
+                            viewModel.bookmarkUrl(currentWebPageTitle.value, currentUrl.value)
                         },
                         onUpdateCurrentUrl = {
                             viewModel.saveCurrentUrl(it)
-                        }
+                        },
+                        onNavigateToBookmark = onNavigateToBookmark
                     )
                 }
             }
@@ -146,6 +152,7 @@ fun MainScreenMenu(
     currentUrl: String,
     onBookmarkUrl: () -> Unit,
     onUpdateCurrentUrl: (url: String) -> Unit,
+    onNavigateToBookmark: () -> Unit,
 ){
     val textValue = rememberSaveable {
         mutableStateOf("")
@@ -193,6 +200,10 @@ fun MainScreenMenu(
             Button(onClick = { onUpdateCurrentUrl("https://www.hetushu.com") }) {
                 Text(text = "和图书")
             }
+        }
+
+        Button(onClick = onNavigateToBookmark ) {
+            Text(text = stringResource(R.string.button_bookmark_list))
         }
 
     }

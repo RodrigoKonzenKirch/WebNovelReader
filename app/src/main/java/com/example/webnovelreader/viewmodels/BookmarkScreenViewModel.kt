@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class BookmarkScreenViewModel @Inject constructor(
-    private val repository: BookmarkRepository,
+    repository: BookmarkRepository,
 ): ViewModel() {
 
     private var _allBookmarksList: StateFlow<List<Bookmark>> = repository.allBookmarks()

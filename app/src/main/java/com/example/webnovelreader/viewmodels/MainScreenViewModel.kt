@@ -2,6 +2,7 @@ package com.example.webnovelreader.viewmodels
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.webnovelreader.data.Bookmark
 import com.example.webnovelreader.di.DispatcherIo
 import com.example.webnovelreader.domain.BookmarkRepository
 import com.example.webnovelreader.domain.UserPreferences
@@ -42,7 +43,9 @@ class MainScreenViewModel @Inject constructor(
         }
     }
 
-    fun bookmarkUrl(url: String) {
-
+    fun bookmarkUrl(name: String, url: String) {
+        viewModelScope.launch(dispatcherIo) {
+            repository.saveBookmark(Bookmark(0, name, url))
+        }
     }
 }
