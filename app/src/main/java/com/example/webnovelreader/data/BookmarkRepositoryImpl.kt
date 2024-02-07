@@ -15,7 +15,7 @@ class BookmarkRepositoryImpl @Inject constructor(
         bookmarkDao.deleteBookmark(bookmark)
     }
 
-    override suspend fun allBookmarks(): Flow<List<Bookmark>> {
+    override fun allBookmarks(): Flow<List<Bookmark>> {
         return bookmarkDao.getAllBookmarks()
     }
 

@@ -9,6 +9,6 @@ interface BookmarkRepository {
 
     suspend fun deleteBookmark(bookmark: Bookmark)
 
-    suspend fun allBookmarks(): Flow<List<Bookmark>>
+    fun allBookmarks(): Flow<List<Bookmark>>
 
 }
