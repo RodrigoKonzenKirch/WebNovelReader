@@ -8,11 +8,12 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class BookmarkScreenViewModel @Inject constructor(
-    repository: BookmarkRepository,
+    private val repository: BookmarkRepository,
 ): ViewModel() {
 
     private var _allBookmarksList: StateFlow<List<Bookmark>> = repository.allBookmarks()
@@ -23,4 +24,9 @@ class BookmarkScreenViewModel @Inject constructor(
         )
     val allBookmarksList = _allBookmarksList
 
+    fun deleteBookmark(bookmark: Bookmark) {
+        viewModelScope.launch {
+            repository.deleteBookmark(bookmark)
+        }
+    }
 }
