@@ -17,6 +17,8 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -25,6 +27,7 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -36,6 +39,7 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.webnovelreader.R
 import com.example.webnovelreader.viewmodels.MainScreenViewModel
+import kotlinx.coroutines.launch
 
 @Composable
 fun MainScreen(
@@ -52,6 +56,8 @@ fun MainScreen(
         mutableStateOf(false)
     }
 
+    val snackbarHostState = remember{ SnackbarHostState() }
+    val scope = rememberCoroutineScope()
     Scaffold(
         bottomBar = {
             BottomAppBar {
@@ -62,6 +68,9 @@ fun MainScreen(
                     Icon(Icons.Outlined.Menu, "Menu" )
                 }
             }
+        },
+        snackbarHost = {
+            SnackbarHost( hostState = snackbarHostState )
         }
     ) { innerPadding ->
         Column(modifier.padding(innerPadding)) {
@@ -86,6 +95,9 @@ fun MainScreen(
                         currentUrl.value,
                         onBookmarkUrl = {
                             viewModel.bookmarkUrl(currentWebPageTitle.value, currentUrl.value)
+                            scope.launch {
+                                snackbarHostState.showSnackbar("Current Url bookmarked!")
+                            }
                         },
                         onUpdateCurrentUrl = {
                             viewModel.saveCurrentUrl(it)
