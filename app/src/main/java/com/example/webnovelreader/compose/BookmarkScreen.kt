@@ -1,5 +1,6 @@
 package com.example.webnovelreader.compose
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,9 +16,13 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
@@ -27,6 +32,7 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.webnovelreader.R
 import com.example.webnovelreader.data.Bookmark
 import com.example.webnovelreader.viewmodels.BookmarkScreenViewModel
+import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -37,6 +43,8 @@ fun BookmarkScreen(
     val viewModel = hiltViewModel<BookmarkScreenViewModel>()
 
     val allBookmarks = viewModel.allBookmarksList.collectAsStateWithLifecycle()
+    val snackbarHostState = remember{ SnackbarHostState() }
+    val scope = rememberCoroutineScope()
 
     Scaffold(
         topBar = {
@@ -48,6 +56,9 @@ fun BookmarkScreen(
                     }
                 }
             )
+        },
+        snackbarHost = {
+            SnackbarHost( hostState = snackbarHostState )
         }
     ) { paddingValues ->
         ListOfBookmarks(
@@ -55,6 +66,12 @@ fun BookmarkScreen(
             allBookmarks.value,
             onDeleteItem = {
                 viewModel.deleteBookmark(it)
+            },
+            onSelectBookmark = {
+                viewModel.saveCurrentUrl(it)
+                scope.launch {
+                    snackbarHostState.showSnackbar("Url selected!")
+                }
             }
         )
     }
@@ -65,6 +82,7 @@ fun ListOfBookmarks(
     modifier: Modifier,
     bookmarks: List<Bookmark>,
     onDeleteItem: (bookmark: Bookmark) -> Unit,
+    onSelectBookmark: (url: String) -> Unit,
 ) {
     LazyColumn(
         modifier = modifier,
@@ -76,7 +94,12 @@ fun ListOfBookmarks(
                     modifier = Modifier.padding(4.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    Column(modifier = Modifier.weight(1f)) {
+                    Column(
+                        modifier = Modifier
+                            .weight(1f)
+                            .clickable { onSelectBookmark(bookmark.url) },
+
+                    ) {
                         Text(
                             modifier = Modifier.padding(4.dp),
                             text = bookmark.name

@@ -5,6 +5,7 @@ import androidx.lifecycle.viewModelScope
 import com.example.webnovelreader.data.Bookmark
 import com.example.webnovelreader.di.DispatcherIo
 import com.example.webnovelreader.domain.BookmarkRepository
+import com.example.webnovelreader.domain.UserPreferences
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.flow.SharingStarted
@@ -16,6 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class BookmarkScreenViewModel @Inject constructor(
     private val repository: BookmarkRepository,
+    private val userPreference: UserPreferences,
     @DispatcherIo private val dispatcherIo: CoroutineDispatcher
 ): ViewModel() {
 
@@ -30,6 +32,15 @@ class BookmarkScreenViewModel @Inject constructor(
     fun deleteBookmark(bookmark: Bookmark) {
         viewModelScope.launch(dispatcherIo) {
             repository.deleteBookmark(bookmark)
+        }
+    }
+
+    /**
+     * Save current url
+     */
+    fun saveCurrentUrl(url: String){
+        viewModelScope.launch(dispatcherIo) {
+            userPreference.saveCurrentUrl(url)
         }
     }
 }
