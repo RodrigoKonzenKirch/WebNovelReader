@@ -30,7 +30,7 @@ class MainScreenViewModel @Inject constructor(
     }
         .stateIn(
             viewModelScope,
-            SharingStarted.WhileSubscribed(),
+            SharingStarted.WhileSubscribed(5000),
             "No Url"
         )
 
