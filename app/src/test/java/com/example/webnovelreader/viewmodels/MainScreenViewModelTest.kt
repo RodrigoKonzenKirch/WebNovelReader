@@ -1,6 +1,7 @@
 package com.example.webnovelreader.viewmodels
 
 import com.example.webnovelreader.MainCoroutineRule
+import com.example.webnovelreader.data.Bookmark
 import com.example.webnovelreader.domain.BookmarkRepository
 import com.example.webnovelreader.domain.UserPreferences
 import com.google.common.truth.Truth.assertThat
@@ -28,6 +29,7 @@ class MainScreenViewModelTest() {
     private val myTestScheduler = TestCoroutineScheduler()
     private val testDispatcher = UnconfinedTestDispatcher(myTestScheduler)
 
+    val fakeUrl = "https://www.example.com"
 
     @Before
     fun setUp(){
@@ -45,10 +47,19 @@ class MainScreenViewModelTest() {
 
     @Test
     fun `saveCurrentUrl saves url to preferences`(){
-        val url = "https://www.example.com"
-        viewModel.saveCurrentUrl(url)
+        viewModel.saveCurrentUrl(fakeUrl)
 
-        coVerify{ mockUserPreferences.saveCurrentUrl(url) }
+        coVerify{ mockUserPreferences.saveCurrentUrl(fakeUrl) }
     }
 
+    @Test
+    fun `given a name and url, save a bookmark`() {
+        val name = "name"
+        val bookmark = Bookmark(0, name, fakeUrl)
+
+        viewModel.bookmarkUrl(name, fakeUrl)
+
+        coVerify { mockRepository.saveBookmark(bookmark) }
+
+    }
 }
